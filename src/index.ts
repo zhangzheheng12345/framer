@@ -1,9 +1,6 @@
 import Two from 'two.js'
 import Vector from 'two.js'
 
-
-export type Vec = Vector
-
 export class Render {
   constructor(canvas: HTMLElement, scene: Scene) {
     this.two = new Two({
@@ -12,19 +9,30 @@ export class Render {
     this.scene = scene
   }
   play(): Promise<() => void> {
-    return new Promise(()=>{
+    return new Promise(() => {
       const elements = this.scene.getRenderList(this.two)
       let clock = 0
       this.two.bind('update', () => {
-        elements.map((element) => element.render(element.duration === 0?0:clock%element.duration))
+        elements.map((element) =>
+          element.render(
+            element.animation.duration === 0
+              ? 0 // static
+              : element.animation.delay === 0
+              ? clock % element.animation.duration
+              : clock <= element.animation.delay
+              ? 0
+              : (clock - element.animation.delay) % element.animation.duration
+          )
+        )
         clock += 60
       })
+      this.two.play()
     })
   }
   stop() {
     this.two.pause()
   }
-  private two: Two
+  two: Two
   private scene: Scene
 }
 
@@ -33,7 +41,7 @@ type ElementInitFunc = (twoCtx: Two) => Element
 
 interface Element {
   render: ElementRenderFunc
-  duration: number // 0 => static
+  animation: Animation
 }
 
 export class Scene {
@@ -50,11 +58,27 @@ export class Scene {
   private elements: Array<ElementInitFunc>
 }
 
-export function Rect(x: number, y: number, width: number, height: number, duration: number): ElementInitFunc {
+export interface Rect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+export function createRect(base: Rect, animation: Animation): ElementInitFunc {
   return (twoCtx: Two): Element => {
-    const rect = twoCtx.makeRectangle(x, y, width, height)
-    return { render: (clock: number) => {
-      rect.position.set(x, y)
-    }, duration: duration}
+    const rect = twoCtx.makeRectangle(base.x, base.y, base.width, base.height)
+    return {
+      render: (clock: number) => {
+        rect.fill = '#000'
+        rect.position.set(base.x, base.y)
+      },
+      animation
+    }
   }
+}
+
+interface Animation {
+  duration: number // 0 => static
+  delay: number
 }
