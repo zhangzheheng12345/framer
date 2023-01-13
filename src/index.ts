@@ -1,5 +1,4 @@
 import Two from 'two.js'
-import Vector from 'two.js'
 
 export class Render {
   constructor(canvas: HTMLElement, scene: Scene) {
@@ -7,32 +6,32 @@ export class Render {
       domElement: canvas
     })
     this.scene = scene
+    this.domElement = canvas
   }
-  play(): Promise<() => void> {
-    return new Promise(() => {
-      const elements = this.scene.getRenderList(this.two)
-      let clock = 0
-      this.two.bind('update', () => {
-        elements.map((element) =>
-          element.render(
-            element.animation.duration === 0
-              ? 0 // static
-              : element.animation.delay === 0
-              ? clock % element.animation.duration
-              : clock <= element.animation.delay
-              ? 0
-              : (clock - element.animation.delay) % element.animation.duration
-          )
+  play() {
+    const elements = this.scene.getRenderList(this.two)
+    let clock = 0
+    this.two.bind('update', () => {
+      elements.map((element) =>
+        element.render(
+          element.animation.duration === 0
+            ? 0 // static
+            : element.animation.delay === 0
+            ? clock % element.animation.duration
+            : clock <= element.animation.delay
+            ? 0
+            : (clock - element.animation.delay) % element.animation.duration
         )
-        clock += 60
-      })
-      this.two.play()
+      )
+      clock += 60
     })
+    this.two.play()
   }
   stop() {
     this.two.pause()
   }
-  two: Two
+  domElement: HTMLElement
+  private two: Two
   private scene: Scene
 }
 
@@ -58,20 +57,47 @@ export class Scene {
   private elements: Array<ElementInitFunc>
 }
 
-export interface Rect {
-  x: number
-  y: number
+export interface BasicStyle {
+  fill: string
+  stroke: string
+  position: {
+    x: number
+    y: number
+  }
+}
+
+export interface Rect extends BasicStyle {
   width: number
   height: number
 }
 
-export function createRect(base: Rect, animation: Animation): ElementInitFunc {
+function CompleteRectStyle(base: Partial<Rect>): Rect {
+  return {
+    fill: base.fill ? base.fill : '#000',
+    stroke: base.stroke ? base.stroke : '#fff',
+    position: base.position ? base.position : { x: 0, y: 0 },
+    width: base.width ? base.width : 100,
+    height: base.height ? base.height : 100
+  }
+}
+
+export function createRect(
+  start: Partial<Rect>,
+  animation: Animation
+): ElementInitFunc {
+  const completedStart = CompleteRectStyle(start)
   return (twoCtx: Two): Element => {
-    const rect = twoCtx.makeRectangle(base.x, base.y, base.width, base.height)
+    const rect = twoCtx.makeRectangle(
+      completedStart.position.x,
+      completedStart.position.y,
+      completedStart.width,
+      completedStart.height
+    )
     return {
       render: (clock: number) => {
-        rect.fill = '#000'
-        rect.position.set(base.x, base.y)
+        rect.fill = completedStart.fill
+        rect.stroke = completedStart.stroke
+        rect.position.set(completedStart.position.x, completedStart.position.y)
       },
       animation
     }
