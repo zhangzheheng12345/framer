@@ -1,4 +1,5 @@
 import Two from 'two.js'
+import { MergeDefault } from './utils'
 
 export class Render {
   constructor(canvas: HTMLElement, scene: Scene) {
@@ -72,13 +73,16 @@ export interface Rect extends BasicStyle {
 }
 
 function CompleteRectStyle(base: Partial<Rect>): Rect {
-  return {
-    fill: base.fill ? base.fill : '#000',
-    stroke: base.stroke ? base.stroke : '#fff',
-    position: base.position ? base.position : { x: 0, y: 0 },
-    width: base.width ? base.width : 100,
-    height: base.height ? base.height : 100
-  }
+  return MergeDefault(
+    {
+      fill: '#000',
+      stroke: '#000',
+      position: { x: 0, y: 0 },
+      width: 100,
+      height: 100
+    },
+    base
+  )
 }
 
 export function createRect(
@@ -98,6 +102,8 @@ export function createRect(
         rect.fill = completedStart.fill
         rect.stroke = completedStart.stroke
         rect.position.set(completedStart.position.x, completedStart.position.y)
+        rect.width = completedStart.width
+        rect.height = completedStart.height
       },
       animation
     }
