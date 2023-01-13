@@ -1,4 +1,5 @@
 import Two from 'two.js'
+import {Vector} from 'two.js/src/vector'
 import { MergeDefault } from './utils'
 
 export class Render {
@@ -65,6 +66,17 @@ export interface BasicStyle {
     x: number
     y: number
   }
+  scale: {
+    x: number
+    y: number
+  }
+}
+
+const defaultBasicStyle = {
+  fill: '#000',
+  stroke: '#000',
+  position: {x: 0, y: 0},
+  scale: {x: 0, y: 0}
 }
 
 export interface Rect extends BasicStyle {
@@ -75,9 +87,7 @@ export interface Rect extends BasicStyle {
 function CompleteRectStyle(base: Partial<Rect>): Rect {
   return MergeDefault(
     {
-      fill: '#000',
-      stroke: '#000',
-      position: { x: 0, y: 0 },
+      ...defaultBasicStyle,
       width: 100,
       height: 100
     },
@@ -104,6 +114,7 @@ export function createRect(
         rect.position.set(completedStart.position.x, completedStart.position.y)
         rect.width = completedStart.width
         rect.height = completedStart.height
+        rect.scale = new Vector(completedStart.scale.x, completedStart.scale.y)
       },
       animation
     }
