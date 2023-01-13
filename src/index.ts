@@ -1,5 +1,5 @@
 import Two from 'two.js'
-import {Vector} from 'two.js/src/vector'
+import { Vector } from 'two.js/src/vector'
 import { MergeDefault } from './utils'
 
 export class Render {
@@ -14,17 +14,16 @@ export class Render {
     const elements = this.scene.getRenderList(this.two)
     let clock = 0
     this.two.bind('update', () => {
-      elements.map((element) =>
-        element.render(
-          element.animation.duration === 0
-            ? 0 // static
-            : element.animation.delay === 0
-            ? clock % element.animation.duration
-            : clock <= element.animation.delay
-            ? 0
-            : (clock - element.animation.delay) % element.animation.duration
-        )
-      )
+      elements.map((element) => {
+        if (element.animation.duration === 0)
+          element.render(
+            element.animation.delay === 0
+              ? clock % element.animation.duration
+              : clock <= element.animation.delay
+              ? 0
+              : (clock - element.animation.delay) % element.animation.duration
+          )
+      })
       clock += 60
     })
     this.two.play()
@@ -75,8 +74,8 @@ export interface BasicStyle {
 const defaultBasicStyle = {
   fill: '#000',
   stroke: '#000',
-  position: {x: 0, y: 0},
-  scale: {x: 0, y: 0}
+  position: { x: 0, y: 0 },
+  scale: { x: 0, y: 0 }
 }
 
 export interface Rect extends BasicStyle {
