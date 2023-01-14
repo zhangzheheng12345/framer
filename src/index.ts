@@ -117,16 +117,16 @@ export function createRect(
   start: Partial<Rect>,
   animation?: Partial<Animation<Rect>>
 ): ElementInitFunc {
-  const completedStart = CompleteRectStyle(start)
+  const completeStart = CompleteRectStyle(start)
   const completeAnimation = animation
-    ? CompleteAnimation(animation)
-    : CompleteAnimation({})
+    ? CompleteAnimation(animation, completeStart)
+    : CompleteAnimation({}, completeStart)
   return (twoCtx: Two): Element => {
     const rect = twoCtx.makeRectangle(
-      completedStart.position.x,
-      completedStart.position.y,
-      completedStart.width,
-      completedStart.height
+      completeStart.position.x,
+      completeStart.position.y,
+      completeStart.width,
+      completeStart.height
     )
     return {
       render: (progress: number) => {
@@ -150,7 +150,7 @@ export function createRect(
         )
         rect.fill = transitionFrame.fill
         rect.stroke = transitionFrame.stroke
-        rect.position.set(transitionFrame.position.x, completedStart.position.y)
+        rect.position.set(transitionFrame.position.x, transitionFrame.position.y)
         rect.width = transitionFrame.width
         rect.height = transitionFrame.height
         rect.scale = new Vector(
@@ -171,7 +171,7 @@ interface Animation<T> {
   speedCurve: (origin: number) => number
 }
 
-function CompleteAnimation<T>(base: Partial<Animation<T>>): Animation<T> {
+function CompleteAnimation<T>(base: Partial<Animation<T>>, startFrame: T): Animation<T> {
   let mid = MergeDefault(
     {
       duration: 0,
@@ -182,7 +182,7 @@ function CompleteAnimation<T>(base: Partial<Animation<T>>): Animation<T> {
     base
   )
   // add default 0 & 1 frame if there's no defined
-  if (!mid.frames.has(0)) mid.frames.set(0, mid)
+  if (!mid.frames.has(0)) mid.frames.set(0, startFrame)
   if (!mid.frames.has(1)) {
     mid.frames.set(1, mid.frames.get(LastItemInMap(mid.frames, 1)))
   }
