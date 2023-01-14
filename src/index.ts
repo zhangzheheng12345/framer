@@ -15,14 +15,15 @@ export class Render {
     let clock = 0
     this.two.bind('update', () => {
       elements.map((element) => {
-        if (element.animation.duration === 0)
-          element.render(
-            element.animation.delay === 0
-              ? clock % element.animation.duration
-              : clock <= element.animation.delay
-              ? 0
-              : (clock - element.animation.delay) % element.animation.duration
-          )
+        element.render(
+          element.duration === 0
+            ? 0
+            : element.delay === 0
+            ? clock % element.duration
+            : clock <= element.delay
+            ? 0
+            : (clock - element.delay) % element.duration
+        )
       })
       clock += 60
     })
@@ -41,7 +42,8 @@ type ElementInitFunc = (twoCtx: Two) => Element
 
 interface Element {
   render: ElementRenderFunc
-  animation: Animation
+  duration: number
+  delay: number
 }
 
 export class Scene {
@@ -96,9 +98,12 @@ function CompleteRectStyle(base: Partial<Rect>): Rect {
 
 export function createRect(
   start: Partial<Rect>,
-  animation: Animation
+  animation?: Partial<Animation<Rect>>
 ): ElementInitFunc {
   const completedStart = CompleteRectStyle(start)
+  const completeAnimation = animation
+    ? CompleteAnimation(animation)
+    : CompleteAnimation({})
   return (twoCtx: Two): Element => {
     const rect = twoCtx.makeRectangle(
       completedStart.position.x,
@@ -115,12 +120,25 @@ export function createRect(
         rect.height = completedStart.height
         rect.scale = new Vector(completedStart.scale.x, completedStart.scale.y)
       },
-      animation
+      duration: completeAnimation.duration,
+      delay: completeAnimation.delay
     }
   }
 }
 
-interface Animation {
+interface Animation<T> {
   duration: number // 0 => static
   delay: number
+  frames: Array<T>
+}
+
+function CompleteAnimation<T>(base: Partial<Animation<T>>): Animation<T> {
+  return MergeDefault(
+    {
+      duration: 0,
+      delay: 0,
+      frames: []
+    },
+    base
+  )
 }
