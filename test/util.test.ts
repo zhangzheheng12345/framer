@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest'
 
-import { MergeDefault } from '../src/utils'
+import { MergeDefault, TransitionValue } from '../src/utils'
 
 test('Test MergeDefault', () => {
   const input = {
@@ -18,4 +18,8 @@ test('Test MergeDefault', () => {
     c: 0
   }
   expect(MergeDefault(default_, input)).toEqual(expected)
+})
+
+test('Test TransitionValue', () => {
+  expect(TransitionValue(1, 2, 0.8)).toBe(1.8)
 })
