@@ -121,7 +121,6 @@ export function createRect(
   const completeAnimation = animation
     ? CompleteAnimation(animation)
     : CompleteAnimation({})
-
   return (twoCtx: Two): Element => {
     const rect = twoCtx.makeRectangle(
       completedStart.position.x,
@@ -145,7 +144,9 @@ export function createRect(
         const transitionFrame = TransitionRect(
           lastFrame,
           nextFrame,
-          (progress - lastKey) / (nextKey - lastKey)
+          completeAnimation.speedCurve(
+            (progress - lastKey) / (nextKey - lastKey)
+          )
         )
         rect.fill = transitionFrame.fill
         rect.stroke = transitionFrame.stroke
@@ -180,6 +181,7 @@ function CompleteAnimation<T>(base: Partial<Animation<T>>): Animation<T> {
     },
     base
   )
+  // add default 0 & 1 frame if there's no defined
   if (!mid.frames.has(0)) mid.frames.set(0, mid)
   if (!mid.frames.has(1)) {
     mid.frames.set(1, mid.frames.get(LastItemInMap(mid.frames, 1)))
