@@ -1,4 +1,4 @@
-import type { ElementInitFunc } from "."
+import type { ElementInitFunc } from '.'
 
 export class Scene {
   constructor() {

@@ -9,10 +9,8 @@ export interface Element {
   delay: number
 }
 
-
-
 export type ElementCompleteFunc<T> = (base: Partial<T>) => T
 export type ElementTransitionFunc<T> = (start: T, end: T, progress: number) => T
 
-export {Scene} from './scene'
-export {createRect} from './rect'
+export { Scene } from './scene'
+export { createRect } from './rect'

@@ -1,16 +1,19 @@
-import Two from "two.js"
-import { MergeDefault, TransitionValue } from "../utils"
-import { Transition, CompleteAnimation } from "../animation"
-import {BasicStyle, defaultBasicStyle} from './basic'
-import type { Element, ElementInitFunc, ElementCompleteFunc, ElementTransitionFunc } from "."
-import type { PartialAnimation } from "../animation"
+import Two from 'two.js'
+import { MergeDefault, TransitionValue } from '../utils'
+import { Transition, CompleteAnimation } from '../animation'
+import { BasicStyle, defaultBasicStyle } from './basic'
+import type {
+  Element,
+  ElementInitFunc,
+  ElementCompleteFunc,
+  ElementTransitionFunc
+} from '.'
+import type { PartialAnimation } from '../animation'
 
 export interface Rect extends BasicStyle {
   width: number
   height: number
 }
-
-
 
 const CompleteRectStyle: ElementCompleteFunc<Rect> = (base) => {
   return MergeDefault(
@@ -22,8 +25,6 @@ const CompleteRectStyle: ElementCompleteFunc<Rect> = (base) => {
     base
   )
 }
-
-
 
 const TransitionRect: ElementTransitionFunc<Rect> = (start, end, progress) => {
   return {

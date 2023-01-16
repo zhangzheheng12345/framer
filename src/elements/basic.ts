@@ -11,7 +11,6 @@ export interface BasicStyle {
   }
 }
 
-
 export const defaultBasicStyle: BasicStyle = {
   fill: '#000',
   stroke: '#000',
