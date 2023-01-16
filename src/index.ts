@@ -1,2 +1,2 @@
-export { Scene, createRect } from './elements'
+export { Scene, createRect, createRoundedRect } from './elements'
 export { Render } from './render'
