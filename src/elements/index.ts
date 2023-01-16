@@ -15,3 +15,4 @@ export type ElementTransitionFunc<T> = (start: T, end: T, progress: number) => T
 export { Scene } from './scene'
 export { createRect } from './rect'
 export { createRoundedRect } from './roundedRect'
+export { createCircle } from './circle'
