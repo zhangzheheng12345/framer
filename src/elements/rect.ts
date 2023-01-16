@@ -1,57 +1,16 @@
-import Two from 'two.js'
-import { MergeDefault, TransitionValue } from './utils'
-import { CompleteAnimation, PartialAnimation, Transition } from './animation'
-import type { Animation } from './animation'
-
-export type ElementRenderFunc = (clock: number) => void
-export type ElementInitFunc = (twoCtx: Two) => Element
-
-export interface Element {
-  render: ElementRenderFunc
-  duration: number
-  delay: number
-}
-
-export class Scene {
-  constructor() {
-    this.elements = []
-  }
-  addElement(element: ElementInitFunc): Scene {
-    this.elements.push(element)
-    return this // Support chain
-  }
-  getRenderList(twoCtx: Two): Array<Element> {
-    return this.elements.map((element) => element(twoCtx))
-  }
-  private elements: Array<ElementInitFunc>
-}
-
-export interface BasicStyle {
-  fill: string
-  stroke: string
-  position: {
-    x: number
-    y: number
-  }
-  scale: {
-    x: number
-    y: number
-  }
-}
-
-const defaultBasicStyle = {
-  fill: '#000',
-  stroke: '#000',
-  position: { x: 0, y: 0 },
-  scale: { x: 0, y: 0 }
-}
+import Two from "two.js"
+import { MergeDefault, TransitionValue } from "../utils"
+import { Transition, CompleteAnimation } from "../animation"
+import {BasicStyle, defaultBasicStyle} from './basic'
+import type { Element, ElementInitFunc, ElementCompleteFunc, ElementTransitionFunc } from "."
+import type { PartialAnimation } from "../animation"
 
 export interface Rect extends BasicStyle {
   width: number
   height: number
 }
 
-export type ElementCompleteFunc<T> = (base: Partial<T>) => T
+
 
 const CompleteRectStyle: ElementCompleteFunc<Rect> = (base) => {
   return MergeDefault(
@@ -64,7 +23,7 @@ const CompleteRectStyle: ElementCompleteFunc<Rect> = (base) => {
   )
 }
 
-export type ElementTransitionFunc<T> = (start: T, end: T, progress: number) => T
+
 
 const TransitionRect: ElementTransitionFunc<Rect> = (start, end, progress) => {
   return {

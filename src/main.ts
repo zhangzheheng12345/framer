@@ -1,4 +1,4 @@
-import { createRect, Render, Scene } from './index'
+import { createRect, Render, Scene } from '.'
 
 const scene = new Scene().addElement(
   createRect(
