@@ -24,7 +24,11 @@ const CompleteCircleStyle: ElementCompleteFunc<Circle> = (base) => {
   )
 }
 
-const TransitionCircle: ElementTransitionFunc<Circle> = (start, end, progress) => {
+const TransitionCircle: ElementTransitionFunc<Circle> = (
+  start,
+  end,
+  progress
+) => {
   return {
     fill: start.fill,
     stroke: start.stroke,
@@ -36,7 +40,7 @@ const TransitionCircle: ElementTransitionFunc<Circle> = (start, end, progress) =
       x: TransitionValue(start.scale.x, end.scale.x, progress),
       y: TransitionValue(start.scale.y, end.scale.y, progress)
     },
-    width: TransitionValue(start.radius, end.radius, progress)
+    radius: TransitionValue(start.radius, end.radius, progress)
   }
 }
 
@@ -46,7 +50,7 @@ export function createCircle(
 ): ElementInitFunc {
   const completeStart = CompleteCircleStyle(start)
   const completeAnimation = animation
-    ? CompleteAnimation(animation, completeStart, CompleteCircletyle)
+    ? CompleteAnimation(animation, completeStart, CompleteCircleStyle)
     : CompleteAnimation({}, completeStart, CompleteCircleStyle)
   return (twoCtx: Two): Element => {
     const circle = twoCtx.makeCircle(

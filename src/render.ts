@@ -1,5 +1,6 @@
 import Two from 'two.js'
 import { Scene } from './elements'
+import type { Element } from './elements'
 
 export class Render {
   constructor(canvas: HTMLElement, scene: Scene) {

@@ -28,7 +28,11 @@ const CompleteRoundedRectStyle: ElementCompleteFunc<RoundedRect> = (base) => {
   )
 }
 
-const TransitionRoundedRect: ElementTransitionFunc<RoundedRect> = (start, end, progress) => {
+const TransitionRoundedRect: ElementTransitionFunc<RoundedRect> = (
+  start,
+  end,
+  progress
+) => {
   return {
     fill: start.fill,
     stroke: start.stroke,
@@ -42,7 +46,7 @@ const TransitionRoundedRect: ElementTransitionFunc<RoundedRect> = (start, end, p
     },
     width: TransitionValue(start.width, end.width, progress),
     height: TransitionValue(start.height, end.height, progress),
-    radius: TrasitionValue(start.radius, end,radius, progress)
+    radius: TransitionValue(start.radius, end.radius, progress)
   }
 }
 
@@ -81,7 +85,7 @@ export function createRoundedRect(
           transitionFrame.scale.x,
           transitionFrame.scale.y
         )
-        rect.radius = trasitionFrame.radius
+        // rect.radius = transitionFrame.radius
       },
       duration: completeAnimation.duration,
       delay: completeAnimation.delay

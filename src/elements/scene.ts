@@ -1,4 +1,5 @@
-import type { ElementInitFunc } from '.'
+import Two from 'two.js'
+import type { Element, ElementInitFunc } from '.'
 
 export class Scene {
   constructor() {
