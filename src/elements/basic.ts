@@ -1,3 +1,6 @@
+import { ElementCompleteFunc } from "."
+import { MergeDefault } from "../utils"
+
 export interface BasicStyle {
   fill: string
   stroke: string
@@ -16,4 +19,8 @@ export const defaultBasicStyle: BasicStyle = {
   stroke: '#000',
   position: { x: 0, y: 0 },
   scale: { x: 0, y: 0 }
+}
+
+export const CompleteBasicStyle: ElementCompleteFunc<BasicStyle> = (base) => { // For testing
+  return MergeDefault(defaultBasicStyle, base)
 }

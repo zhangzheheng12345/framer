@@ -2,8 +2,8 @@ import Two from 'two.js'
 import type { Element, ElementInitFunc } from '.'
 
 export class Scene {
-  constructor() {
-    this.elements = []
+  constructor(elements?: Array<ElementInitFunc>) {
+    this.elements = elements? elements: []
   }
   addElement(element: ElementInitFunc): Scene {
     this.elements.push(element)

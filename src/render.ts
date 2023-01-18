@@ -1,14 +1,19 @@
 import Two from 'two.js'
 import { Scene } from './elements'
-import type { Element } from './elements'
+
+interface RenderOptions {
+  fullscreen?: boolean
+  fitted?: boolean
+}
 
 export class Render {
-  constructor(canvas: HTMLElement, scene: Scene) {
+  constructor(canvas: HTMLElement, scene: Scene, options?:RenderOptions ) {
     this.two = new Two({
-      domElement: canvas
+      domElement: canvas,
+      ...(options?options:{})
     })
     this.scene = scene
-    this.domElement = canvas
+    this._domElement = canvas
   }
   play() {
     const elements = this.scene.getRenderList(this.two)
@@ -32,7 +37,10 @@ export class Render {
   stop() {
     this.two.pause()
   }
-  domElement: HTMLElement
+  get domElement() {
+    return this._domElement
+  }
+  private _domElement: HTMLElement
   private two: Two
   private scene: Scene
 }
