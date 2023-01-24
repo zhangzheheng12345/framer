@@ -9,7 +9,10 @@ const scene = new Scene().addElement(
 
 const render = new Render(
   document.getElementById('canvas') as HTMLElement,
-  scene
+  scene,
+  {
+    fullscreen: true
+  }
 )
 
 render.play()
